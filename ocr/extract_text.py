@@ -1,11 +1,19 @@
 from PIL import Image, ImageEnhance, ImageFilter
 import pytesseract
+import shutil
+import os
 
 
-# Tesseract location on Windows
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-)
+# Find Tesseract automatically
+tesseract_path = shutil.which("tesseract")
+
+# Windows local development
+if tesseract_path:
+    pytesseract.pytesseract.tesseract_cmd = tesseract_path
+elif os.path.exists(r"C:\Program Files\Tesseract-OCR\tesseract.exe"):
+    pytesseract.pytesseract.tesseract_cmd = (
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    )
 
 
 def extract_text(image_path):
@@ -18,7 +26,6 @@ def extract_text(image_path):
 
     # Resize image
     width, height = image.size
-
     image = image.resize(
         (width * 3, height * 3)
     )
