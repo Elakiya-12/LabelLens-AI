@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LabelLens AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+            <span class="logo-icon">🏷️</span>
+            <span>LabelLens AI</span>
+        </div>
+
+        <p class="tagline">
+            Understand what you're putting on your skin and into your body.
+        </p>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+        <!-- INTRO -->
+        <section class="intro">
+
+            <h1>Know What’s Inside</h1>
+
+            <p>
+                Upload a product label and let LabelLens AI identify
+                its ingredients and explain what they mean in simple language.
+            </p>
+
+        </section>
+
+
+        <!-- UPLOAD CARD -->
+        <section class="upload-card">
+
+            <div class="upload-icon">
+                📷
+            </div>
+
+            <h2>Upload Product Label</h2>
+
+            <p>
+                Upload a clear image of the product label or ingredient list.
+            </p>
+
+            <label for="imageUpload" class="upload-button">
+                Upload Image
+            </label>
+
+            <input
+                type="file"
+                id="imageUpload"
+                accept="image/*"
+                hidden
+            >
+
+            <p class="supported">
+                Supported formats: JPG, JPEG, PNG
+            </p>
+
+        </section>
+        <!-- CHAT INPUT -->
+<section class="chat-input-section">
+
+    <div class="chat-input-box">
+
+        <div class="text-input-wrapper">
+
+    <textarea
+        id="ingredientInput"
+        placeholder="Enter ingredients, e.g. sugar, salt, niacinamide..."
+    ></textarea>
+
+    <button
+        id="textAnalyzeButton"
+        class="text-send-button"
+        type="button"
+    >
+        ↑
+    </button>
+
+</div>
+
+    </div>
+
+</section>
+
+        <!-- IMAGE PREVIEW -->
+        <section class="preview-section" id="previewSection">
+
+            <h2>Uploaded Image</h2>
+
+            <div class="image-container">
+                <img
+                    id="previewImage"
+                    src=""
+                    alt="Uploaded product image"
+                >
+            </div>
+
+            <button
+                id="analyzeButton"
+                class="analyze-button">
+                Analyze Product
+            </button>
+
+        </section>
+
+
+        <!-- OCR RESULT -->
+        <!-- Hidden until OCR is connected -->
+        <section
+            class="result-section"
+            id="resultSection"
+            style="display: none;">
+
+            <h2>🔍 Extracted Ingredients</h2>
+
+            <div
+                class="ingredient-list"
+                id="ingredientList">
+            </div>
+
+        </section>
+
+
+        <!-- SKIN TYPE -->
+        <section
+            class="skin-section"
+            id="skinSection"
+            style="display: none;">
+
+            <h2>🧴 Personalize Your Analysis</h2>
+
+            <p>
+                Select your skin type to understand whether the
+                detected ingredients may be suitable for you.
+            </p>
+
+            <select id="skinType">
+
+                <option value="">
+                    Select your skin type
+                </option>
+
+                <option value="normal">
+                    Normal
+                </option>
+
+                <option value="dry">
+                    Dry
+                </option>
+
+                <option value="oily">
+                    Oily
+                </option>
+
+                <option value="combination">
+                    Combination
+                </option>
+
+                <option value="sensitive">
+                    Sensitive
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- INGREDIENT ANALYSIS -->
+        <!-- Hidden until RAG is connected -->
+        <section
+            class="analysis-section"
+            id="analysisSection"
+            style="display: none;">
+
+            <h2>🧪 Ingredient Analysis</h2>
+
+            <div id="analysisResults"></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            LabelLens AI — Understand your ingredients. Make informed choices.
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

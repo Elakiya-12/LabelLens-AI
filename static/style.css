@@ -1,0 +1,608 @@
+/* ============================================================
+   LABEL LENS AI - ORANGE & WHITE THEME
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fffaf7;
+    color: #2d2926;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   HEADER - FULL ORANGE
+   ============================================================ */
+
+.header {
+    background: #ff7300;
+    padding: 25px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    box-shadow: 0 4px 15px rgba(255, 115, 0, 0.25);
+}
+
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 30px;
+}
+
+
+/* ============================================================
+   TAGLINE
+   ============================================================ */
+
+.tagline {
+    color: #ffffff;
+    font-size: 15px;
+}
+
+
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: auto;
+    padding: 55px 0;
+}
+
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+
+.intro {
+    text-align: center;
+    margin-bottom: 42px;
+}
+
+.intro h1 {
+    font-size: 43px;
+    color: #e85f00;
+    margin-bottom: 14px;
+}
+
+.intro p {
+    max-width: 700px;
+    margin: auto;
+    color: #716a65;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   COMMON CARDS
+   ============================================================ */
+
+.upload-card,
+.text-input-section,
+.preview-section,
+.result-section,
+.skin-section,
+.analysis-section,
+.question-box {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 28px;
+    border: 1px solid #f1e5dc;
+    box-shadow: 0 8px 28px rgba(80, 45, 20, 0.07);
+}
+
+
+/* ============================================================
+   UPLOAD CARD
+   ============================================================ */
+
+.upload-card {
+    text-align: center;
+    border: 2px dashed #ffb36b;
+    background: #ffffff;
+}
+
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.upload-card h2 {
+    color: #e85f00;
+    margin-bottom: 10px;
+}
+
+.upload-card p {
+    color: #77706b;
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.upload-button,
+.analyze-button {
+    display: inline-block;
+    background: #ff7300;
+    color: white;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 5px 14px rgba(255, 115, 0, 0.22);
+}
+
+.upload-button:hover,
+.analyze-button:hover {
+    background: #e96300;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255, 115, 0, 0.28);
+}
+
+.analyze-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.supported {
+    font-size: 13px;
+    color: #99918c;
+    margin-top: 18px;
+}
+
+
+/* ============================================================
+   TEXT INPUT
+   ============================================================ */
+
+.text-input-section h2 {
+    color: #e85f00;
+    margin-bottom: 10px;
+}
+
+.text-input-section p {
+    color: #77706b;
+    margin-bottom: 18px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    padding: 16px;
+    border: 2px solid #f0ded0;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    background: #fffdfb;
+    margin-bottom: 15px;
+    transition: 0.2s;
+}
+
+textarea:focus {
+    border-color: #ff8a2a;
+    box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.08);
+}
+
+
+/* ============================================================
+   IMAGE PREVIEW
+   ============================================================ */
+
+.preview-section {
+    text-align: center;
+}
+
+.preview-section h2 {
+    color: #e85f00;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto 22px;
+    padding: 10px;
+    background: #fff8f2;
+    border: 1px solid #f1dfd1;
+    border-radius: 16px;
+}
+
+.image-container img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+
+/* ============================================================
+   EXTRACTED INGREDIENTS
+   ============================================================ */
+
+.result-section h2 {
+    color: #e85f00;
+    margin-bottom: 20px;
+}
+
+.ingredient-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ingredient {
+    display: inline-block;
+    padding: 9px 15px;
+    border-radius: 25px;
+    background: #fff3e8;
+    color: #d95e00;
+    border: 1px solid #ffc48f;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.ingredient:hover {
+    background: #ff7300;
+    color: #ffffff;
+    border-color: #ff7300;
+    transform: translateY(-2px);
+}
+
+
+/* ============================================================
+   SKIN TYPE
+   ============================================================ */
+
+.skin-section h2 {
+    color: #e85f00;
+    margin-bottom: 10px;
+}
+
+.skin-section p {
+    color: #77706b;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+#skinType {
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #f0ded0;
+    border-radius: 11px;
+    background: #fffdfb;
+    font-size: 15px;
+    outline: none;
+}
+
+#skinType:focus {
+    border-color: #ff8a2a;
+}
+
+
+/* ============================================================
+   QUESTION BOX
+   ============================================================ */
+
+.question-box {
+    background: #ffffff;
+    border-top: 4px solid #ff7300;
+}
+
+.question-box h2 {
+    color: #e85f00;
+    margin-bottom: 8px;
+}
+
+.question-box p {
+    color: #77706b;
+    margin-bottom: 18px;
+}
+
+.question-row {
+    display: flex;
+    gap: 12px;
+}
+
+#ingredientQuestion {
+    flex: 1;
+    padding: 14px 16px;
+    border: 2px solid #f0ded0;
+    border-radius: 11px;
+    font-size: 15px;
+    outline: none;
+    background: #fffdfb;
+}
+
+#ingredientQuestion:focus {
+    border-color: #ff8a2a;
+    box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.08);
+}
+
+#questionLoading {
+    margin-top: 15px;
+    color: #e85f00;
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   INGREDIENT ANALYSIS
+   ============================================================ */
+
+.analysis-section h2 {
+    color: #e85f00;
+    margin-bottom: 20px;
+}
+
+.ingredient-card {
+    background: #fffdfb;
+    border: 1px solid #f0ded0;
+    border-left: 5px solid #ff7300;
+    border-radius: 14px;
+    padding: 25px;
+    line-height: 1.7;
+    color: #39332f;
+}
+
+.ingredient-card h3 {
+    color: #e85f00;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.ingredient-card strong {
+    color: #d95e00;
+}
+
+.ingredient-card ul {
+    margin: 8px 0 18px 22px;
+}
+
+.ingredient-card li {
+    margin-bottom: 7px;
+}
+
+.ingredient-card p {
+    margin-bottom: 10px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+    text-align: center;
+    padding: 25px;
+    background: #2d2926;
+    color: #eee5df;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 22px;
+    }
+
+    .container {
+        width: 94%;
+        padding: 35px 0;
+    }
+
+    .intro h1 {
+        font-size: 32px;
+    }
+
+    .intro p {
+        font-size: 15px;
+    }
+
+    .upload-card,
+    .text-input-section,
+    .preview-section,
+    .result-section,
+    .skin-section,
+    .analysis-section,
+    .question-box {
+        padding: 22px;
+    }
+
+    .question-row {
+        flex-direction: column;
+    }
+
+    #ingredientQuestion {
+        width: 100%;
+    }
+
+    .question-row .analyze-button {
+        width: 100%;
+    }
+}
+/* ============================================================
+   TEXT INPUT - SEND BUTTON INSIDE TEXTBOX
+   ============================================================ */
+
+.text-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.text-input-wrapper textarea {
+    width: 100%;
+    min-height: 130px;
+    padding: 16px 65px 16px 16px;
+    border: 2px solid #f0ded0;
+    border-radius: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    resize: vertical;
+    outline: none;
+    background: #fffdfb;
+    margin-bottom: 0;
+}
+
+.text-input-wrapper textarea:focus {
+    border-color: #ff7300;
+    box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.08);
+}
+
+
+/* Send button */
+
+.text-send-button {
+    position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #ff7300;
+    color: white;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 10px rgba(255, 115, 0, 0.25);
+
+    transition: all 0.2s ease;
+}
+
+.text-send-button:hover {
+    background: #e96300;
+    transform: translateY(-2px);
+}
+
+.text-send-button:active {
+    transform: scale(0.95);
+}
+
+.text-send-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}/* ============================================================
+   TEXT INPUT - SEND BUTTON INSIDE TEXTBOX
+   ============================================================ */
+
+.text-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.text-input-wrapper textarea {
+    width: 100%;
+    min-height: 130px;
+    padding: 16px 65px 16px 16px;
+    border: 2px solid #f0ded0;
+    border-radius: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    resize: vertical;
+    outline: none;
+    background: #fffdfb;
+    margin-bottom: 0;
+}
+
+.text-input-wrapper textarea:focus {
+    border-color: #ff7300;
+    box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.08);
+}
+
+
+/* Send button */
+
+.text-send-button {
+    position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #ff7300;
+    color: white;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 10px rgba(255, 115, 0, 0.25);
+
+    transition: all 0.2s ease;
+}
+
+.text-send-button:hover {
+    background: #e96300;
+    transform: translateY(-2px);
+}
+
+.text-send-button:active {
+    transform: scale(0.95);
+}
+
+.text-send-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

@@ -1,0 +1,7 @@
+Flask
+Werkzeug
+langchain-chroma
+langchain-huggingface
+sentence-transformers
+ollama
+chromadb
