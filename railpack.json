@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "provider": "python",
+  "deploy": {
+    "aptPackages": [
+      "...",
+      "tesseract-ocr"
+    ],
+    "startCommand": "gunicorn --bind 0.0.0.0:$PORT app:app"
+  }
+}
