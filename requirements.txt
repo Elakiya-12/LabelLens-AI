@@ -1,9 +1,9 @@
 Flask
 Werkzeug
+gunicorn
+Pillow
 langchain-chroma
 langchain-huggingface
 sentence-transformers
 ollama
 chromadb
-Pillow
-gunicorn
