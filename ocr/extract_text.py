@@ -1,16 +1,9 @@
 from PIL import Image, ImageEnhance, ImageFilter
 import pytesseract
-import shutil
 import os
 
-
-# Find Tesseract automatically
-tesseract_path = shutil.which("tesseract")
-
-# Windows local development
-if tesseract_path:
-    pytesseract.pytesseract.tesseract_cmd = tesseract_path
-elif os.path.exists(r"C:\Program Files\Tesseract-OCR\tesseract.exe"):
+# Use Windows Tesseract locally
+if os.name == "nt":
     pytesseract.pytesseract.tesseract_cmd = (
         r"C:\Program Files\Tesseract-OCR\tesseract.exe"
     )
