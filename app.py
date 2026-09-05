@@ -7,9 +7,31 @@ from ocr.extract_ingredients import extract_ingredients
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-import ollama
+from groq import Groq
+from dotenv import load_dotenv
+
 import os
 import re
+
+
+# ============================================================
+# LOAD ENVIRONMENT VARIABLES
+# ============================================================
+
+load_dotenv()
+
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+
+if not GROQ_API_KEY:
+    raise RuntimeError(
+        "GROQ_API_KEY is not set. "
+        "Create a .env file locally or add GROQ_API_KEY "
+        "in Railway Variables."
+    )
+
+client = Groq(
+    api_key=GROQ_API_KEY
+)
 
 
 # ============================================================
@@ -42,19 +64,18 @@ CHROMA_PATH = os.path.join(
     "chroma_db"
 )
 
+print("======================================")
 print("Loading LabelLens RAG...")
-
+print("======================================")
 
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-
 db = Chroma(
     persist_directory=CHROMA_PATH,
     embedding_function=embeddings
 )
-
 
 print(
     "CHROMA PATH:",
@@ -83,10 +104,6 @@ def home():
 # IMAGE ANALYSIS
 # ============================================================
 #
-# DO NOT CHANGE THIS ROUTE.
-#
-# This is your existing working OCR pipeline.
-#
 # Image
 #   ↓
 # OCR
@@ -95,7 +112,7 @@ def home():
 #   ↓
 # JSON response
 #
-# Ollama is NOT called here.
+# Groq is NOT called here.
 # ============================================================
 
 @app.route(
@@ -111,9 +128,7 @@ def analyze():
             "message": "No image uploaded"
         }), 400
 
-
     image = request.files["image"]
-
 
     if image.filename == "":
 
@@ -122,22 +137,18 @@ def analyze():
             "message": "No image selected"
         }), 400
 
-
     filename = secure_filename(
         image.filename
     )
-
 
     image_path = os.path.join(
         app.config["UPLOAD_FOLDER"],
         filename
     )
 
-
     image.save(
         image_path
     )
-
 
     try:
 
@@ -174,16 +185,7 @@ def analyze():
 
 
         # ====================================================
-        # RETURN IMMEDIATELY
-        # ====================================================
-        #
-        # IMPORTANT:
-        # We do NOT call Ollama here.
-        #
-        # This keeps image processing fast.
-        #
-        # The user can click an ingredient and ask
-        # about it separately.
+        # RETURN OCR RESULT
         # ====================================================
 
         return jsonify({
@@ -212,7 +214,6 @@ def analyze():
             e
         )
 
-
         return jsonify({
 
             "success": False,
@@ -237,12 +238,10 @@ def find_ingredient_document(
         .strip()
     )
 
-
     print(
         "\nSearching RAG for:",
         ingredient
     )
-
 
     try:
 
@@ -252,19 +251,16 @@ def find_ingredient_document(
 
         all_data = db.get()
 
-
         documents = all_data.get(
             "documents",
             []
         )
-
 
         for document in documents:
 
             lines = document.split(
                 "\n"
             )
-
 
             for line in lines:
 
@@ -281,11 +277,7 @@ def find_ingredient_document(
                         .lower()
                     )
 
-
-                    if (
-                        database_name
-                        == ingredient
-                    ):
+                    if database_name == ingredient:
 
                         print(
                             "EXACT MATCH:",
@@ -303,12 +295,10 @@ def find_ingredient_document(
             "Trying semantic search..."
         )
 
-
         results = db.similarity_search(
             ingredient,
             k=5
         )
-
 
         for document in results:
 
@@ -316,7 +306,6 @@ def find_ingredient_document(
                 document.page_content
                 .split("\n")
             )
-
 
             for line in lines:
 
@@ -333,14 +322,10 @@ def find_ingredient_document(
                         .lower()
                     )
 
-
                     if (
-                        database_name
-                        == ingredient
-                        or ingredient
-                        in database_name
-                        or database_name
-                        in ingredient
+                        database_name == ingredient
+                        or ingredient in database_name
+                        or database_name in ingredient
                     ):
 
                         print(
@@ -496,6 +481,73 @@ IMPORTANT RULES:
 
 
 # ============================================================
+# GROQ GENERATION FUNCTION
+# ============================================================
+
+def generate_ai_response(
+    prompt,
+    max_tokens=900
+):
+
+    try:
+
+        print(
+            "Sending request to Groq..."
+        )
+
+        result = client.chat.completions.create(
+
+            model="llama-3.1-8b-instant",
+
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+
+            temperature=0,
+
+            max_tokens=max_tokens
+        )
+
+        answer = (
+            result
+            .choices[0]
+            .message
+            .content
+            .strip()
+        )
+
+        if not answer:
+
+            return (
+                "The AI could not generate an explanation. "
+                "Please try again."
+            )
+
+        print(
+            "GROQ RESPONSE RECEIVED"
+        )
+
+        return answer
+
+
+    except Exception as e:
+
+        print(
+            "GROQ ERROR:",
+            e
+        )
+
+        raise e
+
+
+# ============================================================
 # ASK ABOUT INGREDIENT FROM IMAGE
 # ============================================================
 
@@ -506,7 +558,6 @@ IMPORTANT RULES:
 def ask():
 
     data = request.get_json()
-
 
     if not data:
 
@@ -553,7 +604,6 @@ def ask():
 
     selected_ingredient = None
 
-
     question_lower = (
         question.lower()
     )
@@ -564,9 +614,13 @@ def ask():
 
     for ingredient in ingredients:
 
+        ingredient_lower = (
+            ingredient.lower().strip()
+        )
+
         if (
-            ingredient.lower()
-            in question_lower
+            ingredient_lower
+            and ingredient_lower in question_lower
         ):
 
             selected_ingredient = (
@@ -586,7 +640,7 @@ def ask():
 
             if (
                 question_lower
-                == ingredient.lower()
+                == ingredient.lower().strip()
             ):
 
                 selected_ingredient = (
@@ -608,7 +662,6 @@ def ask():
     print("\n======================================")
     print("STEP 3: RAG ANALYSIS")
     print("======================================")
-
 
     print(
         "Ingredient selected:",
@@ -645,36 +698,29 @@ def ask():
 
 
     # ========================================================
-    # OLLAMA PROMPT
+    # GROQ PROMPT
     # ========================================================
 
     prompt = f"""
 
-{SYSTEM_PROMPT}
-
-
-==================================================
 USER QUESTION
 ==================================================
 
 {question}
 
 
-==================================================
 INGREDIENT BEING ANALYZED
 ==================================================
 
 {selected_ingredient}
 
 
-==================================================
 RETRIEVED LABEL LENS KNOWLEDGE
 ==================================================
 
 {document}
 
 
-==================================================
 FINAL INSTRUCTION
 ==================================================
 
@@ -689,54 +735,15 @@ Do not add outside information.
 
 
     # ========================================================
-    # OLLAMA
+    # GROQ
     # ========================================================
 
     try:
 
-        print(
-            "Sending ONE ingredient to Ollama..."
+        answer = generate_ai_response(
+            prompt,
+            max_tokens=500
         )
-
-
-        result = ollama.generate(
-
-            model="llama3.2:3b",
-
-            prompt=prompt,
-
-            options={
-
-                "temperature": 0,
-
-                "num_predict": 500
-
-            }
-
-        )
-
-
-        answer = (
-            result.get(
-                "response",
-                ""
-            )
-            .strip()
-        )
-
-
-        if not answer:
-
-            answer = (
-                "The AI could not generate an explanation. "
-                "Please try again."
-            )
-
-
-        print(
-            "OLLAMA RESPONSE RECEIVED"
-        )
-
 
         return jsonify({
 
@@ -754,10 +761,9 @@ Do not add outside information.
     except Exception as e:
 
         print(
-            "OLLAMA ERROR:",
+            "AI GENERATION ERROR:",
             e
         )
-
 
         return jsonify({
 
@@ -772,21 +778,6 @@ Do not add outside information.
 # ============================================================
 # MANUAL TEXT ANALYSIS
 # ============================================================
-#
-# NEW ROUTE
-#
-# This does NOT affect /analyze.
-#
-# Text
-#   ↓
-# Split ingredients
-#   ↓
-# RAG search
-#   ↓
-# Ollama
-#   ↓
-# Structured explanation
-# ============================================================
 
 @app.route(
     "/analyze-text",
@@ -795,7 +786,6 @@ Do not add outside information.
 def analyze_text_route():
 
     data = request.get_json()
-
 
     if not data:
 
@@ -849,7 +839,6 @@ def analyze_text_route():
         ingredients_text
         .replace("\n", " ")
     )
-
 
     ingredients_text = re.sub(
         r"\s+",
@@ -917,7 +906,6 @@ def analyze_text_route():
                 ingredient
             )
 
-
             retrieved_documents.append(
                 f"""
 Ingredient: {ingredient}
@@ -963,7 +951,7 @@ Knowledge Base Information:
 
 
     print(
-        "\nSending retrieved information to Ollama..."
+        "\nSending retrieved information to Groq..."
     )
 
 
@@ -973,28 +961,22 @@ Knowledge Base Information:
 
     prompt = f"""
 
-{SYSTEM_PROMPT}
-
-
-==================================================
 USER PROVIDED INGREDIENTS
 ==================================================
 
 {", ".join(ingredients)}
 
 
-==================================================
 RETRIEVED LABEL LENS KNOWLEDGE
 ==================================================
 
 {context}
 
 
-==================================================
 FINAL INSTRUCTION
 ==================================================
 
-Analyze the ingredients that have retrieved information.
+Analyze ONLY the ingredients that have retrieved information.
 
 For each ingredient, follow exactly this structure:
 
@@ -1002,76 +984,59 @@ For each ingredient, follow exactly this structure:
 
 **What is it?**
 
+Explain using ONLY the retrieved knowledge.
+
 **Why is it added to the product?**
+
+Explain using ONLY the retrieved knowledge.
 
 **What does it do?**
 
+Explain using ONLY the retrieved knowledge.
+
 **Possible benefits:**
 
-- ...
+- List only benefits explicitly supported by the knowledge base.
 
 **Possible concerns:**
 
-...
+List only concerns explicitly supported by the knowledge base.
+
+If no concerns are provided, write:
+
+No specific concerns are mentioned in the current knowledge base.
 
 **Overall:**
 
-...
+Give a simple assessment based ONLY on the retrieved knowledge.
 
-Use ONLY the retrieved knowledge.
+Use:
 
-If an ingredient was not found in the knowledge base,
-do not invent information about it.
+🟢 Generally suitable
 
-Keep the response simple and useful.
+🟡 Depends on usage / concentration / formulation
+
+🔴 May require caution
+
+Do NOT use outside knowledge.
+
+Do NOT invent information for ingredients that were not found.
+
+Keep the response simple and consumer-friendly.
 
 """
 
 
     # ========================================================
-    # OLLAMA
+    # GROQ
     # ========================================================
 
     try:
 
-        result = ollama.generate(
-
-            model="llama3.2:3b",
-
-            prompt=prompt,
-
-            options={
-
-                "temperature": 0,
-
-                "num_predict": 900
-
-            }
-
+        analysis = generate_ai_response(
+            prompt,
+            max_tokens=900
         )
-
-
-        analysis = (
-            result.get(
-                "response",
-                ""
-            )
-            .strip()
-        )
-
-
-        if not analysis:
-
-            analysis = (
-                "The AI could not generate an analysis. "
-                "Please try again."
-            )
-
-
-        print(
-            "TEXT ANALYSIS COMPLETE"
-        )
-
 
         return jsonify({
 
@@ -1089,10 +1054,9 @@ Keep the response simple and useful.
     except Exception as e:
 
         print(
-            "TEXT ANALYSIS OLLAMA ERROR:",
+            "TEXT ANALYSIS GROQ ERROR:",
             e
         )
-
 
         return jsonify({
 
@@ -1110,6 +1074,22 @@ Keep the response simple and useful.
 
 if __name__ == "__main__":
 
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
+    print("======================================")
+    print("Starting LabelLens AI...")
+    print(
+        f"Server running on port {port}"
+    )
+    print("======================================")
+
     app.run(
-        debug=True
+        host="0.0.0.0",
+        port=port,
+        debug=False
     )
