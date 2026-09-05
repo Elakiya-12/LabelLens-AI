@@ -6,5 +6,6 @@ pytesseract
 langchain-chroma
 langchain-huggingface
 sentence-transformers
-ollama
 chromadb
+groq
+python-dotenv
