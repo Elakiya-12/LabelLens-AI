@@ -2,6 +2,7 @@ Flask
 Werkzeug
 gunicorn
 Pillow
+pytesseract
 langchain-chroma
 langchain-huggingface
 sentence-transformers
