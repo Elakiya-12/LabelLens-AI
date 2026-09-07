@@ -1,0 +1,24 @@
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables / API keys
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Chroma temporary/cache files
+*.lock
+
+# Uploaded images
+uploads/*
+
+# IDE files
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

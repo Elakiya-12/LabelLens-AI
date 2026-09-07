@@ -22,12 +22,10 @@ load_dotenv()
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
+print("GROQ_API_KEY PRESENT:", bool(GROQ_API_KEY))
+
 if not GROQ_API_KEY:
-    raise RuntimeError(
-        "GROQ_API_KEY is not set. "
-        "Create a .env file locally or add GROQ_API_KEY "
-        "in Railway Variables."
-    )
+    print("WARNING: GROQ_API_KEY is NOT available")
 
 client = Groq(
     api_key=GROQ_API_KEY
@@ -189,21 +187,15 @@ def analyze():
         # ====================================================
 
         return jsonify({
-
             "success": True,
-
             "message":
                 "Image analyzed successfully",
-
             "filename":
                 filename,
-
             "ingredients":
                 ingredients,
-
             "ocr_text":
                 text
-
         })
 
 
@@ -215,12 +207,9 @@ def analyze():
         )
 
         return jsonify({
-
             "success": False,
-
             "message":
                 str(e)
-
         }), 500
 
 
@@ -361,7 +350,6 @@ def find_ingredient_document(
 # ============================================================
 
 SYSTEM_PROMPT = """
-
 You are LabelLens AI, an ingredient awareness assistant.
 
 Your job is to explain product ingredients using ONLY the
@@ -442,38 +430,22 @@ Use one of these indicators when supported by the information:
 IMPORTANT RULES:
 
 1. Use ONLY the retrieved LabelLens knowledge.
-
 2. Do NOT use outside knowledge.
-
 3. Do NOT invent benefits.
-
 4. Do NOT invent side effects.
-
 5. Do NOT invent risks.
-
 6. Do NOT invent nutritional information.
-
 7. Do NOT invent medical information.
-
 8. Do NOT automatically treat the ingredient as skincare.
-
 9. Do NOT automatically treat the ingredient as food.
-
 10. Do NOT claim an ingredient is completely safe.
-
 11. Do NOT claim an ingredient is completely harmful.
-
 12. Do not diagnose medical conditions.
-
 13. Keep the explanation simple and consumer-friendly.
-
 14. Do not add unnecessary greetings.
-
 15. Do not say "I'm LabelLens AI".
-
 16. Do not discuss ingredients that were not provided
     in the retrieved knowledge.
-
 17. If the knowledge base does not contain enough
     information, clearly say so.
 
@@ -497,17 +469,20 @@ def generate_ai_response(
 
         result = client.chat.completions.create(
 
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-20b",
 
             messages=[
+
                 {
                     "role": "system",
                     "content": SYSTEM_PROMPT
                 },
+
                 {
                     "role": "user",
                     "content": prompt
                 }
+
             ],
 
             temperature=0,
@@ -562,12 +537,9 @@ def ask():
     if not data:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "No question received"
-
         }), 400
 
 
@@ -589,12 +561,9 @@ def ask():
     if not question:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "Please enter a question"
-
         }), 400
 
 
@@ -663,6 +632,7 @@ def ask():
     print("STEP 3: RAG ANALYSIS")
     print("======================================")
 
+
     print(
         "Ingredient selected:",
         selected_ingredient
@@ -681,14 +651,11 @@ def ask():
     if document is None:
 
         return jsonify({
-
             "success": True,
-
             "answer":
                 "I couldn't find enough information about "
                 f"'{selected_ingredient}' in the current "
                 "LabelLens knowledge base."
-
         })
 
 
@@ -702,7 +669,6 @@ def ask():
     # ========================================================
 
     prompt = f"""
-
 USER QUESTION
 ==================================================
 
@@ -746,15 +712,11 @@ Do not add outside information.
         )
 
         return jsonify({
-
             "success": True,
-
             "answer":
                 answer,
-
             "ingredient":
                 selected_ingredient
-
         })
 
 
@@ -766,12 +728,9 @@ Do not add outside information.
         )
 
         return jsonify({
-
             "success": False,
-
             "message":
                 f"AI generation error: {e}"
-
         }), 500
 
 
@@ -790,12 +749,9 @@ def analyze_text_route():
     if not data:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "No text received"
-
         }), 400
 
 
@@ -811,12 +767,9 @@ def analyze_text_route():
     if not ingredients_text:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "Please enter an ingredient."
-
         }), 400
 
 
@@ -869,12 +822,9 @@ def analyze_text_route():
     if not ingredients:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "No valid ingredients found."
-
         }), 400
 
 
@@ -906,6 +856,7 @@ def analyze_text_route():
                 ingredient
             )
 
+
             retrieved_documents.append(
                 f"""
 Ingredient: {ingredient}
@@ -924,14 +875,11 @@ Knowledge Base Information:
     if not retrieved_documents:
 
         return jsonify({
-
             "success": True,
-
             "analysis":
                 "I couldn't find enough information about "
                 "the entered ingredient(s) in the current "
                 "LabelLens knowledge base."
-
         })
 
 
@@ -960,7 +908,6 @@ Knowledge Base Information:
     # ========================================================
 
     prompt = f"""
-
 USER PROVIDED INGREDIENTS
 ==================================================
 
@@ -1039,15 +986,11 @@ Keep the response simple and consumer-friendly.
         )
 
         return jsonify({
-
             "success": True,
-
             "analysis":
                 analysis,
-
             "ingredients":
                 found_ingredients
-
         })
 
 
@@ -1059,12 +1002,9 @@ Keep the response simple and consumer-friendly.
         )
 
         return jsonify({
-
             "success": False,
-
             "message":
                 f"AI generation error: {e}"
-
         }), 500
 
 
