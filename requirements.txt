@@ -5,7 +5,7 @@ Pillow
 pytesseract
 langchain-chroma
 langchain-huggingface
-sentence-transformers
+sentence-transformers==3.4.1
 chromadb
 groq
 python-dotenv
