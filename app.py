@@ -66,23 +66,32 @@ print("======================================")
 print("Loading LabelLens RAG...")
 print("======================================")
 
-embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
-)
+db = None
 
-db = Chroma(
-    persist_directory=CHROMA_PATH,
-    embedding_function=embeddings
-)
+
+def get_rag_db():
+    global db
+
+    if db is None:
+        print("Loading RAG database...")
+
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+
+        db = Chroma(
+            persist_directory=CHROMA_PATH,
+            embedding_function=embeddings
+        )
+
+        print("RAG database loaded.")
+
+    return db
+
 
 print(
     "CHROMA PATH:",
     CHROMA_PATH
-)
-
-print(
-    "CHROMA RECORDS:",
-    db._collection.count()
 )
 
 
@@ -238,7 +247,9 @@ def find_ingredient_document(
         # EXACT SEARCH
         # ====================================================
 
-        all_data = db.get()
+        rag_db = get_rag_db()
+
+        all_data = rag_db.get()
 
         documents = all_data.get(
             "documents",
@@ -284,7 +295,7 @@ def find_ingredient_document(
             "Trying semantic search..."
         )
 
-        results = db.similarity_search(
+        results = rag_db.similarity_search(
             ingredient,
             k=5
         )
